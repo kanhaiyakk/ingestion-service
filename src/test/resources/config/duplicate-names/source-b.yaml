@@ -1,0 +1,7 @@
+name: dup-source
+base_url: https://example.com/api/b
+
+pagination:
+  type: offset
+  page_param: page
+  size_param: size

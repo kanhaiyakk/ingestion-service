@@ -1,0 +1,11 @@
+name: pokeapi
+base_url: https://pokeapi.co/api/v2
+path: /pokemon
+
+pagination:
+  type: cursor
+  cursor_path: "$.next"
+
+extract:
+  records_path: "$.results"
+  id_path: "$.name"

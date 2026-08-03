@@ -1,0 +1,21 @@
+# Public API, no auth required.
+name: pokeapi
+base_url: https://pokeapi.co/api/v2
+path: /pokemon
+
+pagination:
+  type: cursor
+  cursor_path: "$.next"
+  page_size: 20
+  max_pages: 50
+
+extract:
+  records_path: "$.results"
+  id_path: "$.name"
+
+sink:
+  type: postgres
+  table: pokemon
+
+rate_limit:
+  requests_per_second: 5.0

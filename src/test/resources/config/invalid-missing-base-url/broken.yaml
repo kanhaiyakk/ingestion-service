@@ -1,0 +1,9 @@
+name: broken-source
+
+pagination:
+  type: cursor
+  cursor_path: "$.next"
+
+extract:
+  records_path: "$.results"
+  id_path: "$.name"
