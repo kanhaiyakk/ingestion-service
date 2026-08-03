@@ -29,3 +29,6 @@ management:
 # Directory of declarative source definitions loaded at startup.
 ingestion:
   sources-dir: ${INGESTION_SOURCES_DIR:sources}
+  http:
+    # Connect and read timeout applied to every outbound fetch.
+    timeout: ${INGESTION_HTTP_TIMEOUT:10s}

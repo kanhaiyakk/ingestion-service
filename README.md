@@ -44,5 +44,31 @@ _To be documented._
 
 ## Use of AI tools
 
-_To be documented, including one place an AI tool got something wrong and how I
-caught it._
+Built with Claude Code, working through the design ticket by ticket.
+
+**Where it got something wrong, and how I caught it:** implementing the HTTP
+layer's WireMock tests, the assistant first added `org.wiremock:wiremock` (the
+current "core" artifact) as the test dependency. Running `mvn test` (not just
+compiling) surfaced two real problems in sequence:
+
+1. `NoSuchMethodError: RequestConfig$Builder.setProtocolUpgradeEnabled` —
+   Spring Boot's dependency-management BOM silently downgrades
+   `httpclient5`/`httpcore5` to the 5.2.x line, which predates a method
+   WireMock 3.13.2's compiled code calls. Nothing in `pom.xml` hinted at
+   this; `mvn dependency:tree -Dverbose=true` was needed to see the BOM
+   overriding WireMock's own declared version.
+2. After pinning `httpclient5`/`httpcore5` explicitly to silence that,
+   startup failed differently: `FatalStartupException: Jetty 11 is not
+   present`. The `wiremock` core artifact no longer bundles an embedded
+   server as of the 3.x split — that now lives in a separate
+   `wiremock-jetty12` extension.
+
+Rather than keep chasing version pins, the fix was to swap to
+`org.wiremock:wiremock-standalone`, a self-contained artifact bundling a
+matched Jetty and HttpClient5, which needs no manual pinning at all. Caught
+by actually executing the test suite and reading the runtime stack traces
+closely enough to tell a classpath *version conflict* apart from a *missing
+module* — a compile-only check would have missed both.
+
+_More to document as later tickets land: architecture rationale, design
+tradeoffs, what I'd do with more time._
