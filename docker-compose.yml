@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ingestion
+      POSTGRES_USER: ingestion
+      POSTGRES_PASSWORD: ingestion
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ingestion -d ingestion"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/ingestion
+      DB_USER: ingestion
+      DB_PASSWORD: ingestion
+      INGESTION_SOURCES_DIR: /app/sources
+    ports:
+      - "8080:8080"

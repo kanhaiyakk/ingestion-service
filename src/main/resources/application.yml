@@ -1,0 +1,31 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: ingestion-service
+
+  # Datasource is env-driven so the same jar runs locally and in Docker Compose.
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/ingestion}
+    username: ${DB_USER:ingestion}
+    password: ${DB_PASSWORD:ingestion}
+
+  jpa:
+    hibernate:
+      # Fine for an assignment; a real deployment would use Flyway/Liquibase migrations.
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+# Directory of declarative source definitions loaded at startup.
+ingestion:
+  sources-dir: ${INGESTION_SOURCES_DIR:sources}
