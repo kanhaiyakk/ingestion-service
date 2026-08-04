@@ -10,6 +10,9 @@ RUN mvn -q -e -DskipTests clean package
 # ---- run stage ----
 FROM eclipse-temurin:17-jre
 WORKDIR /app
+# curl only for the Compose healthcheck below; not needed by the app itself.
+RUN apt-get update && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
 COPY --from=build /app/target/*.jar app.jar
 # Source definitions ship alongside the jar.
 COPY sources ./sources

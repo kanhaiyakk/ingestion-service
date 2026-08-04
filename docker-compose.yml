@@ -23,5 +23,14 @@ services:
       DB_USER: ingestion
       DB_PASSWORD: ingestion
       INGESTION_SOURCES_DIR: /app/sources
+      # Fine-grained, read-only GitHub PAT for sources/github.yaml; forwarded
+      # from the host shell's env. Everything else works fine without it.
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
     ports:
       - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 30s

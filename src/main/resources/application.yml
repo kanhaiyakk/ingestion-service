@@ -32,3 +32,9 @@ ingestion:
   http:
     # Connect and read timeout applied to every outbound fetch.
     timeout: ${INGESTION_HTTP_TIMEOUT:10s}
+  object-store:
+    # Local-disk stand-in for S3, used by S3Sink via ObjectStoreClient. Swap
+    # LocalFileObjectStoreClient for a real S3-backed implementation to point
+    # this at an actual bucket with no change to S3Sink or the engine.
+    root: ${INGESTION_OBJECT_STORE_ROOT:object-store}
+    bucket: ${INGESTION_OBJECT_STORE_BUCKET:ingestion-records}
