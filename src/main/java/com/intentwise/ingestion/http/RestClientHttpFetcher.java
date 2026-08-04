@@ -21,6 +21,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.MediaType;
@@ -53,6 +54,7 @@ public class RestClientHttpFetcher implements HttpFetcher {
     private final Duration baseBackoff;
     private final Retry retry;
 
+    @Autowired
     public RestClientHttpFetcher(ObjectMapper objectMapper,
             @Value("${ingestion.http.timeout:10s}") Duration timeout) {
         this(objectMapper, timeout, Duration.ofMillis(500));
