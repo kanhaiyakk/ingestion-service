@@ -1,0 +1,18 @@
+# Public API, no auth required.
+name: breweries
+base_url: https://api.openbrewerydb.org/v1
+path: /breweries
+
+pagination:
+  type: page_number
+  page_param: page
+  size_param: per_page
+  page_size: 50
+  max_pages: 5
+
+extract:
+  id_path: "$.id"
+
+sink:
+  type: postgres
+  table: breweries

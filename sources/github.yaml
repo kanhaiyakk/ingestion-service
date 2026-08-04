@@ -1,0 +1,29 @@
+# Requires GITHUB_TOKEN in the environment: a fine-grained personal access
+# token with read-only "Metadata" (or "Contents") repository access. Create
+# one at https://github.com/settings/personal-access-tokens — no scopes beyond
+# read-only metadata are needed to list an org's public repos. Unauthenticated
+# requests work too but are capped at 60/hour, which max_pages alone won't
+# save you from if the run gets retried a few times.
+name: github
+base_url: https://api.github.com
+path: /orgs/github/repos
+
+request:
+  query_params:
+    per_page: "100"
+
+auth:
+  type: bearer
+  secret_env: GITHUB_TOKEN
+  scheme: Bearer
+
+pagination:
+  type: link_header
+  max_pages: 3
+
+extract:
+  id_path: "$.id"
+
+sink:
+  type: postgres
+  table: github_items
