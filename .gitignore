@@ -5,3 +5,10 @@ target/
 .vscode/
 .DS_Store
 *.log
+
+# Secrets are env-only, never committed (see AuthConfig.secretEnv / GITHUB_TOKEN).
+.env
+.env.*
+
+# Local-disk stand-in for S3 (see S3Sink / LocalFileObjectStoreClient) — demo output, not source.
+/object-store/
