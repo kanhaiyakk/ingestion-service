@@ -58,10 +58,23 @@ public class DefaultIngestionEngine implements IngestionEngine {
 
     @Override
     public IngestionRun run(String sourceName) {
-        SourceConfig source = sourceRegistry.get(sourceName);
+        IngestionRun run = start(sourceName);
+        execute(run);
+        return run;
+    }
 
+    @Override
+    public IngestionRun start(String sourceName) {
+        sourceRegistry.get(sourceName);
         IngestionRun run = runRepository.saveAndFlush(new IngestionRun(sourceName, IngestionRunStatus.RUNNING, Instant.now()));
         log.info("Starting ingestion run {} for source '{}'", run.getId(), sourceName);
+        return run;
+    }
+
+    @Override
+    public void execute(IngestionRun run) {
+        String sourceName = run.getSource();
+        SourceConfig source = sourceRegistry.get(sourceName);
 
         int pagesFetched = 0;
         long recordsWritten = 0;
@@ -98,7 +111,6 @@ public class DefaultIngestionEngine implements IngestionEngine {
 
             log.info("Run {} for source '{}' succeeded: {} page(s), {} record(s)",
                     run.getId(), sourceName, pagesFetched, recordsWritten);
-            return run;
         } catch (Exception e) {
             run.setStatus(IngestionRunStatus.FAILED);
             run.setPagesFetched(pagesFetched);

@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface IngestionRunRepository extends JpaRepository<IngestionRun, Long> {
 
     List<IngestionRun> findBySource(String source);
+
+    List<IngestionRun> findTop50ByOrderByStartedAtDesc();
 }
