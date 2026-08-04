@@ -78,6 +78,17 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- OpenAPI docs + Swagger UI for the REST API. Pinned to 2.6.0: from
+             2.7.0 onward, SwaggerResourceResolver extends Spring Framework's
+             LiteWebJarsResourceResolver, added in Spring Framework 6.2 (Boot
+             3.4+); Boot 3.2.5 ships Spring Framework 6.1.x, so anything 2.7.0+
+             fails at context startup with NoClassDefFoundError. -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.6.0</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
